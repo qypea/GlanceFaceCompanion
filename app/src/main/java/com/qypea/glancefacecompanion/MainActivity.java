@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
+    private CalendarScraper calendarScraper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        calendarScraper = new CalendarScraper();
+        refresh();
     }
 
     @Override
@@ -36,5 +39,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void refresh() {
+        // Refresh the calendar state
+        calendarScraper.refresh(getApplicationContext());
     }
 }
