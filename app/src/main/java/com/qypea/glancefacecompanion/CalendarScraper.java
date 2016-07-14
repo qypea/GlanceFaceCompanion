@@ -83,8 +83,19 @@ public class CalendarScraper {
                                     null, null, null);
                 assert c != null;
                 c.moveToFirst();
-                title = c.getString(c.getColumnIndex("title"));
-                location = c.getString(c.getColumnIndex("eventLocation"));
+
+                if (c.isNull(c.getColumnIndex("title"))) {
+                    title = "null";
+                } else {
+                    title = c.getString(c.getColumnIndex("title"));
+                }
+
+                if (c.isNull(c.getColumnIndex("eventLocation"))) {
+                    location = "";
+                } else {
+                    location = c.getString(c.getColumnIndex("eventLocation"));
+                }
+
                 c.close();
 
                 beginTime = begin;
