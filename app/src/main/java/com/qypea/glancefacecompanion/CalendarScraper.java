@@ -79,7 +79,7 @@ public class CalendarScraper {
                 // Get extra fields about it
                 Uri CALENDAR_URI = Uri.parse("content://com.android.calendar/events/" + uid);
                 Cursor c = cr.query(CALENDAR_URI,
-                                    new String[] { "title", "eventLocation", "description",},
+                                    new String[] { "title", "eventLocation" },
                                     null, null, null);
                 assert c != null;
                 c.moveToFirst();
