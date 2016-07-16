@@ -32,7 +32,6 @@ public class CalendarScraper {
 
     public void refresh(Context context) {
         final long now = new Date().getTime();
-        final long CurrentTime = System.currentTimeMillis();
         ContentResolver cr = context.getContentResolver();
 
         Log.d(TAG, "CalendarScraper refresh:"
@@ -73,7 +72,7 @@ public class CalendarScraper {
 
             // Determine if this is the one we want
             //noinspection StringEquality
-            if (begin >= (CurrentTime - cooldownTime) // in the future or cooldown
+            if (begin >= (now - cooldownTime) // in the future or cooldown
                 && (allDay.equals("0")) // not all day
                 && (status == 1 || alarm == 1))  {// has alarm or accepted
 
