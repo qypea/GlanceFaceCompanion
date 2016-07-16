@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         if (text == null) {
             Log.e(TAG, "Unable to get text view to draw");
         } else {
-            String value = "";
+            String value;
             if (calendarScraper.title != null) {
                 value = new SimpleDateFormat("HH:mm", Locale.US).format(calendarScraper.beginTime);
                 value += " - " + calendarScraper.title + '\n';
