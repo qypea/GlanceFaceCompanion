@@ -28,6 +28,10 @@ public class CalendarScraper {
 
     CalendarScraper() {
         Log.d(TAG, "CalendarScraper constructed");
+        title = null;
+        location = "";
+        beginTime = 0;
+        endTime = 0;
     }
 
     public void refresh(Context context) {
