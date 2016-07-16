@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         calendarScraper = new CalendarScraper();
-        refresh();
+        refresh("init");
     }
 
     @Override
@@ -42,14 +43,14 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            refresh();
+            refresh("user");
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void refresh() {
+    public void refresh(final String reason) {
         // Refresh the calendar state
         calendarScraper.refresh(getApplicationContext());
 
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 value = "No event";
             }
+            value += "\n\nRefresh trigger:" + reason + "@"
+                + new SimpleDateFormat("HH:mm", Locale.US).format(new Date().getTime());
             text.setText(value);
         }
     }
