@@ -3,11 +3,18 @@ package com.qypea.glancefacecompanion;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     private CalendarScraper calendarScraper;
+
+    private static final String TAG = "GlanceFace Main";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,5 +52,21 @@ public class MainActivity extends AppCompatActivity {
     public void refresh() {
         // Refresh the calendar state
         calendarScraper.refresh(getApplicationContext());
+
+        // Draw current value
+        TextView text = (TextView) findViewById(R.id.textView);
+        if (text == null) {
+            Log.e(TAG, "Unable to get text view to draw");
+        } else {
+            String value = "";
+            if (calendarScraper.title != null) {
+                value = new SimpleDateFormat("HH:mm", Locale.US).format(calendarScraper.beginTime);
+                value += " - " + calendarScraper.title + '\n';
+                value += calendarScraper.location;
+            } else {
+                value = "No event";
+            }
+            text.setText(value);
+        }
     }
 }
