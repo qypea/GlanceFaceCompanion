@@ -35,7 +35,8 @@ public class CalendarScraper {
         final long CurrentTime = System.currentTimeMillis();
         ContentResolver cr = context.getContentResolver();
 
-        Log.d(TAG, "CalendarScraper refresh:" + CurrentTime);
+        Log.d(TAG, "CalendarScraper refresh:"
+                + new SimpleDateFormat("HH:mm", Locale.US).format(now));
 
         // Clear out previous event info
         title = null;
