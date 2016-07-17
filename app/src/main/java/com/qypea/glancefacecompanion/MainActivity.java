@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void refresh(final String reason) {
+    private void refresh(final String reason) {
         // Refresh the calendar state
         calendarScraper.refresh(getApplicationContext(), reason);
 

@@ -32,7 +32,7 @@ public class CalendarScraper extends BroadcastReceiver{
     public long refreshTime; // What time did we last refresh?
 
     // This value is defined and consumed by app code, so any value will work.
-    public static final int REQUEST_CODE = 0;
+    private static final int REQUEST_CODE = 0;
 
     public CalendarScraper() {
         Log.d(TAG, "CalendarScraper constructed");
