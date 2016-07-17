@@ -21,6 +21,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".CalendarScraper" android:exported="false">
+            <intent-filter>
+                <action android:name="com.qypea.GlanceFaceCompanion.UPDATE_CALENDAR" />
+                <action android:name="android.intent.action.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
