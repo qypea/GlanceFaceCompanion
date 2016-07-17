@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void refresh(final String reason) {
         // Refresh the calendar state
-        calendarScraper.refresh(getApplicationContext());
+        calendarScraper.refresh(getApplicationContext(), reason);
 
         // Draw current value
         TextView text = (TextView) findViewById(R.id.textView);
@@ -67,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 value = "No event";
             }
-            value += "\n\nRefresh trigger:" + reason + "@"
-                + new SimpleDateFormat("HH:mm", Locale.US).format(new Date().getTime());
+            value += "\n\nRefresh trigger:" + calendarScraper.refreshReason + "@"
+                + new SimpleDateFormat("HH:mm", Locale.US).format(calendarScraper.refreshTime);
             text.setText(value);
         }
     }

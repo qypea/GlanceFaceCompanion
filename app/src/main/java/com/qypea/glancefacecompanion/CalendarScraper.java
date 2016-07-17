@@ -25,6 +25,8 @@ public class CalendarScraper {
     public String location;
     public long beginTime; // When the event begins
     public long endTime;   // Begin + cooldown -- when to clear notification
+    public String refreshReason; // Why did we last refresh?
+    public long refreshTime; // What time did we last refresh?
 
     CalendarScraper() {
         Log.d(TAG, "CalendarScraper constructed");
@@ -34,12 +36,14 @@ public class CalendarScraper {
         endTime = 0;
     }
 
-    public void refresh(Context context) {
-        final long now = new Date().getTime();
+    public void refresh(Context context, final String reason) {
+        refreshTime = new Date().getTime();
+        refreshReason = reason;
+
         ContentResolver cr = context.getContentResolver();
 
         Log.d(TAG, "CalendarScraper refresh:"
-                + new SimpleDateFormat("HH:mm", Locale.US).format(now));
+                + new SimpleDateFormat("HH:mm", Locale.US).format(refreshTime));
 
         // Clear out previous event info
         title = null;
@@ -50,8 +54,8 @@ public class CalendarScraper {
         // Get next valid event
         Uri.Builder builder
                 = Uri.parse("content://com.android.calendar/instances/when").buildUpon();
-        ContentUris.appendId(builder, now );
-        ContentUris.appendId(builder, now + DateUtils.DAY_IN_MILLIS);
+        ContentUris.appendId(builder, refreshTime );
+        ContentUris.appendId(builder, refreshTime + DateUtils.DAY_IN_MILLIS);
         Cursor eventCursor = cr.query(builder.build(),
                 new String[] { "event_id", "begin", "end", "allDay",
                                "selfAttendeeStatus", "hasAlarm" },
@@ -76,7 +80,7 @@ public class CalendarScraper {
 
             // Determine if this is the one we want
             //noinspection StringEquality
-            if (begin >= (now - cooldownTime) // in the future or cooldown
+            if (begin >= (refreshTime - cooldownTime) // in the future or cooldown
                 && (allDay.equals("0")) // not all day
                 && (status == 1 || alarm == 1))  {// has alarm or accepted
 
