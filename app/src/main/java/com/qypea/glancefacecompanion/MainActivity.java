@@ -13,6 +13,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     private CalendarScraper calendarScraper;
+    private PebbleBinding pebbleBinding;
 
     private static final String TAG = "GlanceFace Main";
 
@@ -23,8 +24,18 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         calendarScraper = new CalendarScraper();
+        pebbleBinding = new PebbleBinding(getApplicationContext());
         refresh("init");
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Update the state
+        redraw();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
         // Refresh the calendar state
         calendarScraper.refresh(getApplicationContext(), reason);
 
+        // Update our view
+        redraw();
+    }
+
+    private void redraw() {
         // Draw current value
         TextView text = (TextView) findViewById(R.id.textView);
         if (text == null) {
@@ -70,5 +86,11 @@ public class MainActivity extends AppCompatActivity {
                 + new SimpleDateFormat("HH:mm", Locale.US).format(calendarScraper.refreshTime);
             text.setText(value);
         }
+
+        // TODO: Make calendarScraper signal to UI, pebbleBinding when it refreshes itself too
+        pebbleBinding.update(getApplicationContext(),
+                new SimpleDateFormat("HH:mm", Locale.US).format(calendarScraper.beginTime)
+                        + " - " + calendarScraper.title,
+                calendarScraper.location);
     }
 }
