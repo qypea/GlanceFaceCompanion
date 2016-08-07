@@ -69,28 +69,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void redraw() {
+        String event;
+        String location;
+        if (calendarScraper.title != null) {
+            event = new SimpleDateFormat("HH:mm", Locale.US).format(calendarScraper.beginTime)
+                + " - " + calendarScraper.title;
+            location = calendarScraper.location;
+        } else {
+            event = "No event";
+            location = "";
+        }
+
         // Draw current value
         TextView text = (TextView) findViewById(R.id.textView);
         if (text == null) {
             Log.e(TAG, "Unable to get text view to draw");
         } else {
-            String value;
-            if (calendarScraper.title != null) {
-                value = new SimpleDateFormat("HH:mm", Locale.US).format(calendarScraper.beginTime);
-                value += " - " + calendarScraper.title + '\n';
-                value += calendarScraper.location;
-            } else {
-                value = "No event";
-            }
-            value += "\n\nRefresh trigger:" + calendarScraper.refreshReason + "@"
+            String value = event + '\n' + location + "\n\n"
+                + "Refresh trigger:" + calendarScraper.refreshReason + "@"
                 + new SimpleDateFormat("HH:mm", Locale.US).format(calendarScraper.refreshTime);
             text.setText(value);
         }
 
         // TODO: Make calendarScraper signal to UI, pebbleBinding when it refreshes itself too
-        pebbleBinding.update(getApplicationContext(),
-                new SimpleDateFormat("HH:mm", Locale.US).format(calendarScraper.beginTime)
-                        + " - " + calendarScraper.title,
-                calendarScraper.location);
+        pebbleBinding.update(getApplicationContext(), event, location);
     }
 }
