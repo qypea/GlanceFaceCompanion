@@ -121,8 +121,7 @@ public class CalendarScraper {
 
     private void scheduleUpdate(long time) {
         // Schedule alarm when event is elapsed
-        Intent intent = new Intent("com.qypea.GlanceFaceCompanion.UPDATE_CALENDAR");
-        intent.setClassName(context, "GlanceService");
+        Intent intent = new Intent(context, GlanceService.class);
         intent.setType("timer");
 
         PendingIntent sender = PendingIntent.getService(context, 0, intent,
