@@ -42,12 +42,16 @@ public class GlanceService extends Service {
         pebbleBinding = new PebbleBinding(this);
         event = "No event";
         location = "";
+
+        refresh("create");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand");
-        refresh(intent.getType());
+        if (!intent.getType().equals("init")) {
+            refresh(intent.getType());
+        }
         return START_STICKY;
     }
 
