@@ -22,12 +22,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".CalendarScraper" android:exported="false">
-            <intent-filter>
-                <action android:name="com.qypea.GlanceFaceCompanion.UPDATE_CALENDAR" />
-                <action android:name="android.intent.action.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE" />
-            </intent-filter>
-        </receiver>
+        <service android:name=".GlanceService" android:exported="false"></service>
     </application>
 
 </manifest>

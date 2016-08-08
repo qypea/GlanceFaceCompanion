@@ -1,5 +1,6 @@
 package com.qypea.glancefacecompanion;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,10 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-    private CalendarScraper calendarScraper;
-    private PebbleBinding pebbleBinding;
-
-    private static final String TAG = "GlanceFace Main";
+    private static final String TAG = "GlanceFaceMain";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +21,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        calendarScraper = new CalendarScraper();
-        pebbleBinding = new PebbleBinding(getApplicationContext());
-        refresh("init");
+
+        // Kick off the service
+        Intent intent = new Intent(this, GlanceService.class);
+        intent.setType("init");
+        startService(intent);
     }
 
     @Override
@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         // Update the state
         redraw();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,45 +52,33 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            refresh("user");
+            GlanceService.singleton.refresh("user");
+            redraw();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void refresh(final String reason) {
-        // Refresh the calendar state
-        calendarScraper.refresh(getApplicationContext(), reason);
-
-        // Update our view
-        redraw();
-    }
-
     private void redraw() {
-        String event;
-        String location;
-        if (calendarScraper.title != null) {
-            event = new SimpleDateFormat("HH:mm", Locale.US).format(calendarScraper.beginTime)
-                + " - " + calendarScraper.title;
-            location = calendarScraper.location;
-        } else {
-            event = "No event";
-            location = "";
-        }
+        GlanceService glanceService = GlanceService.singleton;
 
         // Draw current value
         TextView text = (TextView) findViewById(R.id.textView);
         if (text == null) {
             Log.e(TAG, "Unable to get text view to draw");
         } else {
-            String value = event + '\n' + location + "\n\n"
-                + "Refresh trigger:" + calendarScraper.refreshReason + "@"
-                + new SimpleDateFormat("HH:mm", Locale.US).format(calendarScraper.refreshTime);
+            String value;
+            if (glanceService == null) {
+                value = "Service not yet running";
+            } else {
+                value = glanceService.event + '\n'
+                        + glanceService.location + "\n\n"
+                        + "Refresh trigger:" + glanceService.calendarScraper.refreshReason + "@"
+                        + new SimpleDateFormat("HH:mm", Locale.US).format(
+                            glanceService.calendarScraper.refreshTime);
+            }
             text.setText(value);
         }
-
-        // TODO: Make calendarScraper signal to UI, pebbleBinding when it refreshes itself too
-        pebbleBinding.update(getApplicationContext(), event, location);
     }
 }

@@ -13,7 +13,7 @@ import java.util.UUID;
  * Created by q on 8/6/16.
  * Handle the connection to my pebble app, send events to it
  */
-public class PebbleBinding extends BroadcastReceiver {
+class PebbleBinding {
     private final static int AppKeyEvent = 1;
     private final static int AppKeyLocation = 2;
     private final static UUID appUuid = UUID.fromString("c70a54ab-dffb-473d-bfa0-2575ff43a9e9");
@@ -21,23 +21,32 @@ public class PebbleBinding extends BroadcastReceiver {
     private String currentEvent = null;
     private String currentLocation = null;
 
-    public PebbleBinding(Context context) {
+    private final Context context;
+
+    public PebbleBinding(Context _context) {
+        context = _context;
+
         // Register for watch started
-        PebbleKit.registerPebbleConnectedReceiver(context, this);
+        PebbleKit.registerPebbleConnectedReceiver(context, new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                sync();
+            }
+        });
 
         // Start the app if not yet running
         PebbleKit.startAppOnPebble(context, appUuid);
     }
 
-    public void update(Context context, final String event, final String location) {
+    public void update(final String event, final String location) {
         // Update the currently displayed event
         currentEvent = event;
         currentLocation = location;
 
-        sync(context);
+        sync();
     }
 
-    private void sync(Context context) {
+    private void sync() {
         // Sync the current state to the watch face
         // Called on update or when watch face connects
 
@@ -57,10 +66,5 @@ public class PebbleBinding extends BroadcastReceiver {
 
             PebbleKit.sendDataToPebble(context, appUuid, dict);
         }
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        sync(context);
     }
 }

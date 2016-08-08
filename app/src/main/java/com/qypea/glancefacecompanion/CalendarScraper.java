@@ -1,12 +1,8 @@
 package com.qypea.glancefacecompanion;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.text.format.DateUtils;
@@ -21,9 +17,9 @@ import java.util.Locale;
  * Monitors calendars, provides hooks to pull in 'next event'
  */
 
-public class CalendarScraper extends BroadcastReceiver{
+public class CalendarScraper {
     private static final String TAG = "CalendarScraper";
-    private static final long cooldownTime = 1000 * 60 * 10; // Time to show running event
+    public static final long cooldownTime = 1000 * 60 * 10; // Time to show running event
 
     public String title;
     public String location;
@@ -31,17 +27,17 @@ public class CalendarScraper extends BroadcastReceiver{
     public String refreshReason; // Why did we last refresh?
     public long refreshTime; // What time did we last refresh?
 
-    // This value is defined and consumed by app code, so any value will work.
-    private static final int REQUEST_CODE = 0;
+    private final Context context;
 
-    public CalendarScraper() {
+    public CalendarScraper(Context _context) {
         Log.d(TAG, "CalendarScraper constructed");
         title = null;
         location = "";
         beginTime = 0;
+        context = _context;
     }
 
-    public void refresh(Context context, final String reason) {
+    public void refresh(final String reason) {
         refreshTime = new Date().getTime();
         refreshReason = reason;
 
@@ -112,41 +108,9 @@ public class CalendarScraper extends BroadcastReceiver{
 
                 beginTime = begin;
 
-                this.scheduleUpdate(context, beginTime + cooldownTime);
-
                 break;
             }
         }
         eventCursor.close();
-    }
-
-    private void scheduleUpdate(Context context, long time) {
-        // Schedule alarm when event is elapsed
-        Intent intent = new Intent("com.qypea.GlanceFaceCompanion.UPDATE_CALENDAR");
-        intent.putExtra("Calendar", title);
-        PendingIntent sender = PendingIntent.getBroadcast(context, REQUEST_CODE, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        // Remove alarm if already present
-        am.cancel(sender);
-
-        // Set new alarm
-        am.set(AlarmManager.RTC_WAKEUP, time, sender);
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "onReceive:" + intent.getAction());
-        if (intent.getAction().equals(
-                "com.qypea.GlanceFaceCompanion.UPDATE_CALENDAR")) {
-            refresh(context, "eventEnd");
-        } else if (intent.getAction().equals(
-                "android.intent.action.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE")) {
-            refresh(context, "boot");
-        } else {
-            Log.e(TAG, "Unknown intent action:" + intent.getAction());
-        }
     }
 }
