@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".GlanceService" android:exported="false"></service>
+        <service android:name=".GlanceService" android:exported="false"/>
     </application>
 
 </manifest>

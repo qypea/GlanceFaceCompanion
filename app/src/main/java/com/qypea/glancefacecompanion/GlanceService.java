@@ -1,9 +1,6 @@
 package com.qypea.glancefacecompanion;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -56,37 +53,19 @@ public class GlanceService extends Service {
 
     public void refresh(final String reason) {
         calendarScraper.refresh(reason);
+    }
 
+    public void refreshed() {
         if (calendarScraper.title != null) {
             event = new SimpleDateFormat("HH:mm", Locale.US).format(calendarScraper.beginTime)
                     + " - " + calendarScraper.title;
             location = calendarScraper.location;
-
-            scheduleUpdate(calendarScraper.beginTime + CalendarScraper.cooldownTime);
         } else {
             event = "No event";
             location = "";
         }
 
         pebbleBinding.update(event, location);
-    }
-
-    private void scheduleUpdate(long time) {
-        // Schedule alarm when event is elapsed
-        Intent intent = new Intent("com.qypea.GlanceFaceCompanion.UPDATE_CALENDAR");
-        intent.setClassName(this, "GlanceService");
-        intent.setType("timer");
-
-        PendingIntent sender = PendingIntent.getService(this, 0, intent,
-                                                        PendingIntent.FLAG_UPDATE_CURRENT);
-
-        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
-        // Remove alarm if already present
-        am.cancel(sender);
-
-        // Set new alarm
-        am.set(AlarmManager.RTC_WAKEUP, time, sender);
     }
 
     // Don't like it, but I have to include this
