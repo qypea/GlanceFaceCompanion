@@ -23,6 +23,7 @@ import java.util.Locale;
 public class CalendarScraper {
     private static final String TAG = "CalendarScraper";
     private static final long cooldownTime = 1000 * 60 * 10; // Time to show running event
+    private static final long lookaheadTime = 1000 * 60 * 60 * 16;
 
     public String title;
     public String location;
@@ -58,7 +59,7 @@ public class CalendarScraper {
         Uri.Builder builder
                 = Uri.parse("content://com.android.calendar/instances/when").buildUpon();
         ContentUris.appendId(builder, refreshTime );
-        ContentUris.appendId(builder, refreshTime + DateUtils.DAY_IN_MILLIS);
+        ContentUris.appendId(builder, refreshTime + lookaheadTime);
         Cursor eventCursor = cr.query(builder.build(),
                 new String[] { "event_id", "begin", "end", "allDay",
                                "selfAttendeeStatus", "hasAlarm" },
