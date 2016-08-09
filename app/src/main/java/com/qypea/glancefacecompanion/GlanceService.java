@@ -74,6 +74,10 @@ public class GlanceService extends Service {
         }
 
         pebbleBinding.update(event, location);
+
+        if (MainActivity.singleton != null) {
+            MainActivity.singleton.redraw();
+        }
     }
 
     // Don't like it, but I have to include this

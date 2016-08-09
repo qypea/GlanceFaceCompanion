@@ -15,6 +15,8 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "GlanceFaceMain";
 
+    public static MainActivity singleton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,8 +31,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStop() {
+        singleton = null;
+        super.onStop();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        singleton = this;
 
         // Update the state
         redraw();
@@ -53,14 +62,13 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
             GlanceService.singleton.refresh("user");
-            redraw();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void redraw() {
+    public void redraw() {
         GlanceService glanceService = GlanceService.singleton;
 
         // Draw current value
