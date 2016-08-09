@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.text.format.DateUtils;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
