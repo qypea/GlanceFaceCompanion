@@ -30,7 +30,13 @@ class PebbleBinding {
         PebbleKit.registerPebbleConnectedReceiver(context, new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                sync();
+                delayed_sync();
+            }
+        });
+        PebbleKit.registerReceivedDataHandler(context, new PebbleKit.PebbleDataReceiver(appUuid) {
+            @Override
+            public void receiveData(Context context, int transactionId, PebbleDictionary data) {
+                delayed_sync();
             }
         });
 
@@ -43,6 +49,16 @@ class PebbleBinding {
         currentEvent = event;
         currentLocation = location;
 
+        sync();
+    }
+
+    private void delayed_sync() {
+        try {
+            // Give the watch app time to finish booting
+            Thread.sleep(100);
+        } catch (java.lang.InterruptedException e) {
+            // Noop
+        }
         sync();
     }
 
