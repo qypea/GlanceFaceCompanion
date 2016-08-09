@@ -66,6 +66,9 @@ public class CalendarScraper {
                 null, null, "startDay ASC, startMinute ASC");
                 // For a full list of available columns see http://tinyurl.com/yfbg76w
 
+        // Schedule a timer long in the future for if we don't find any events this time
+        scheduleUpdate(refreshTime + lookaheadTime);
+
         Log.d(TAG, "Event table:");
         assert eventCursor != null;
         while (eventCursor.moveToNext()) {
