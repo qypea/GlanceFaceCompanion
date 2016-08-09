@@ -69,6 +69,10 @@ public class GlanceService extends Service {
             location = "";
         }
 
+        if (location.startsWith("CR - ")) {
+            location = location.substring(5);
+        }
+
         pebbleBinding.update(event, location);
     }
 
