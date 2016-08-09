@@ -1,6 +1,9 @@
 package com.qypea.glancefacecompanion;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -19,6 +22,8 @@ public class GlanceService extends Service {
     public static GlanceService singleton;
     public CalendarScraper calendarScraper;
     private PebbleBinding pebbleBinding;
+
+    private final static int notificationID = 101;
 
     public String event;
     public String location;
@@ -78,6 +83,21 @@ public class GlanceService extends Service {
         if (MainActivity.singleton != null) {
             MainActivity.singleton.redraw();
         }
+
+        notificationUpdate();
+    }
+
+    private void notificationUpdate() {
+        Notification.Builder mBuilder =
+                new Notification.Builder(this)
+                        .setSmallIcon(R.drawable.ic_watch_white_24dp)
+                        .setContentTitle("GlanceFace")
+                        .setContentText(event + '\n' + location)
+                        .setOngoing(true);
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(notificationID, mBuilder.build());
     }
 
     // Don't like it, but I have to include this
