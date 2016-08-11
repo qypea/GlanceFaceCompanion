@@ -106,7 +106,8 @@ public class GlanceService extends Service {
                         .setContentText(event + '\n' + location)
                         .setOngoing(true)
                         .setContentIntent(resultPendingIntent)
-                        .setWhen(new Date().getTime());
+                        .setWhen(new Date().getTime())
+                        .setPriority(Notification.PRIORITY_LOW);
 
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
