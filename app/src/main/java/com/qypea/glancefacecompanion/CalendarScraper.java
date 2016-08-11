@@ -36,7 +36,7 @@ public class CalendarScraper {
     private ContentResolver monitor;
 
     public CalendarScraper(Context _context) {
-        Log.d(TAG, "CalendarScraper constructed");
+        Log.d(TAG, "constructed");
         title = null;
         location = "";
         beginTime = 0;
@@ -59,7 +59,7 @@ public class CalendarScraper {
 
         ContentResolver cr = context.getContentResolver();
 
-        Log.d(TAG, "CalendarScraper refresh:"
+        Log.d(TAG, "refresh:"
                 + new SimpleDateFormat("HH:mm", Locale.US).format(refreshTime));
 
         // Clear out previous event info
