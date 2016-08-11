@@ -6,7 +6,6 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.database.ContentObservable;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -33,7 +32,6 @@ public class CalendarScraper {
     public long refreshTime; // What time did we last refresh?
 
     private final Context context;
-    private ContentResolver monitor;
 
     public CalendarScraper(Context _context) {
         Log.d(TAG, "constructed");
@@ -43,7 +41,7 @@ public class CalendarScraper {
         context = _context;
 
         Uri uri = Uri.parse("content://com.android.calendar/calendars/");
-        monitor = context.getContentResolver();
+        ContentResolver monitor = context.getContentResolver();
         monitor.registerContentObserver(uri, true, new ContentObserver(null) {
             @Override
             public void onChange(boolean selfChange) {
