@@ -2,6 +2,7 @@ package com.qypea.glancefacecompanion;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -88,12 +89,22 @@ public class GlanceService extends Service {
     }
 
     private void notificationUpdate() {
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
         Notification.Builder mBuilder =
                 new Notification.Builder(this)
                         .setSmallIcon(R.drawable.ic_watch_white_24dp)
                         .setContentTitle("GlanceFace")
                         .setContentText(event + '\n' + location)
-                        .setOngoing(true);
+                        .setOngoing(true)
+                        .setContentIntent(resultPendingIntent);
 
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
