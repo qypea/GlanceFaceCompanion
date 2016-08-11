@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">GlanceFaceCompanion</string>
     <string name="action_refresh">Refresh</string>
+    <string name="docstring">Feel free to close this activity, as it is purely for debug.
+        The background service and notification it creates are all you need to keep your
+        Calendars synced up with your watch face.</string>
 </resources>

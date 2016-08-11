@@ -80,9 +80,9 @@ public class MainActivity extends AppCompatActivity {
             if (glanceService == null) {
                 value = "Service not yet running";
             } else {
-                value = glanceService.event + '\n'
-                        + glanceService.location + "\n\n"
-                        + "Refresh trigger:" + glanceService.calendarScraper.refreshReason + "@"
+                value = "Current event:\n    "
+                        + glanceService.event + "\n    " + glanceService.location + "\n\n"
+                        + "Refresh trigger: " + glanceService.calendarScraper.refreshReason + "@"
                         + new SimpleDateFormat("HH:mm", Locale.US).format(
                             glanceService.calendarScraper.refreshTime);
             }
