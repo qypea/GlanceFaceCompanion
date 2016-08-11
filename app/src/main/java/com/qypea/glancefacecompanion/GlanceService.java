@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -104,7 +105,8 @@ public class GlanceService extends Service {
                         .setContentTitle("GlanceFace")
                         .setContentText(event + '\n' + location)
                         .setOngoing(true)
-                        .setContentIntent(resultPendingIntent);
+                        .setContentIntent(resultPendingIntent)
+                        .setWhen(new Date().getTime());
 
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
