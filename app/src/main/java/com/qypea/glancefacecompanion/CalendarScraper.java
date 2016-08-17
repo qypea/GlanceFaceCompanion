@@ -77,7 +77,7 @@ public class CalendarScraper {
                 // For a full list of available columns see http://tinyurl.com/yfbg76w
 
         // Schedule a timer long in the future for if we don't find any events this time
-        scheduleUpdate(refreshTime + lookaheadTime);
+        scheduleUpdate(refreshTime + (lookaheadTime / 2));
 
         Log.d(TAG, "Event table:");
         assert eventCursor != null;
