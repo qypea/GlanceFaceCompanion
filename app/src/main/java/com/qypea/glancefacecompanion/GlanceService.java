@@ -56,7 +56,13 @@ public class GlanceService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand");
-        if (!intent.getType().equals("init")) {
+        String t;
+        if (intent == null) {
+            t = null;
+        } else {
+            t = intent.getType();
+        }
+        if (t != null && !t.equals("init")) {
             refresh(intent.getType());
         }
         return START_STICKY;
