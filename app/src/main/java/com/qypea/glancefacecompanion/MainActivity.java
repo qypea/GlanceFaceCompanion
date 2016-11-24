@@ -1,7 +1,12 @@
 package com.qypea.glancefacecompanion;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -24,10 +29,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Kick off the service
-        Intent intent = new Intent(this, GlanceService.class);
-        intent.setType("init");
-        startService(intent);
+        tryStart();
     }
 
     @Override
@@ -61,7 +63,11 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            GlanceService.singleton.refresh("user");
+            if (GlanceService.singleton != null) {
+                GlanceService.singleton.refresh("user");
+            } else {
+                tryStart();
+            }
             return true;
         }
 
@@ -78,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             String value;
             if (glanceService == null) {
-                value = "Service not yet running";
+                value = "Service not yet running. "
+                        + "Close and reopen or refresh to request permissions again";
             } else {
                 value = "Current event:\n    "
                         + glanceService.event + "\n    " + glanceService.location + "\n\n"
@@ -87,6 +94,36 @@ public class MainActivity extends AppCompatActivity {
                             glanceService.calendarScraper.refreshTime);
             }
             text.setText(value);
+        }
+    }
+
+    private void tryStart() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Request permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_CALENDAR},
+                    0);
+
+        } else {
+            // Kick off the service
+            Intent intent = new Intent(this, GlanceService.class);
+            intent.setType("init");
+            startService(intent);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // permission was granted
+            tryStart();
+        //} else {
+            // permission denied. Sit on our hands for now
         }
     }
 }
